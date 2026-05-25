@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <!-- キャッシュ対策：古い画面が残りにくくする -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>GARAGE ILL 管理画面</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -360,6 +364,7 @@
 <div id="pw-screen">
   <h2>GARAGE ILL</h2>
   <p>管理画面 — パスワードを入力してください</p>
+  <p style="font-size:11px;color:#aaa;margin:2px 0 0;">管理画面 v20260525-2</p>
   <input type="password" id="pw-input" inputmode="text" placeholder="管理パスワード"
     onkeydown="if(event.key==='Enter') checkPassword()">
   <p style="font-size:12px;color:#888;margin:4px 0 0;">英数字の管理パスワードも入力できます</p>
