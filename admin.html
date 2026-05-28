@@ -617,7 +617,7 @@
 <script>
 const gasUrl = 'https://script.google.com/macros/s/AKfycbw0n8Q4-SOJsSN3OiXPWJh0dBmod3u5GCnadmimWJxphwxrCT1K2EtyqLKqGdK4KGq2Hw/exec';
 const READ_TOKEN = 'garageill2024';
-let staffData = JSON.parse(localStorage.getItem('staffData') || '[]');
+let staffData = JSON.parse(localStorage.getItem('staffData_admin') || '[]');
 let vehicleData = JSON.parse(localStorage.getItem('vehicleData') || '[]');
 let currentAdminToken = null; // ログイン後にメモリで保持
 
@@ -692,7 +692,11 @@ function switchTab(tab, btn) {
 }
 
 async function gasGet(params) {
-  const url = gasUrl + '?' + new URLSearchParams({ ...params, token: READ_TOKEN });
+  const url = gasUrl + '?' + new URLSearchParams({
+    ...params,
+    token: READ_TOKEN,
+    ...(currentAdminToken ? { adminToken: currentAdminToken } : {})
+  });
   const res = await fetch(url);
   return res.json();
 }
@@ -714,7 +718,7 @@ async function loadMasterData() {
     ]);
     if (staff && Array.isArray(staff)) {
       staffData = staff;
-      localStorage.setItem('staffData', JSON.stringify(staffData));
+      localStorage.setItem('staffData_admin', JSON.stringify(staffData));
     }
     if (vehicles && Array.isArray(vehicles)) {
       vehicleData = vehicles;
