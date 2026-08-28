@@ -171,6 +171,32 @@
     .staff-row .staff-hours { font-size: 13px; color: var(--text2); }
     .staff-row .staff-amount { font-size: 14px; font-weight: 600; color: var(--accent); }
 
+    .section-label {
+      padding: 6px 16px; border-top: 1px solid var(--border);
+      background: var(--surface2); font-size: 11px; color: var(--text2); letter-spacing: .04em;
+    }
+    .cat-row {
+      display: grid; grid-template-columns: 1fr 64px auto; gap: 10px; align-items: center;
+      padding: 7px 16px; border-top: 1px solid var(--border);
+    }
+    .cat-row .cat-name { font-size: 13px; }
+    .cat-bar { height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
+    .cat-bar span { display: block; height: 100%; background: var(--accent); }
+    .cat-hours { font-size: 13px; color: var(--text2); min-width: 46px; text-align: right; }
+    .cat-row { cursor: pointer; }
+    .cat-row:active { background: var(--surface2); }
+    .cat-caret { display: inline-block; width: 14px; font-size: 9px; color: var(--text2); }
+    .cat-detail { display: none; background: var(--bg); }
+    .cat-detail.open { display: block; }
+    .cat-detail-row {
+      display: flex; justify-content: space-between; gap: 10px;
+      padding: 8px 16px 8px 30px; border-top: 1px solid var(--border);
+    }
+    .cat-detail-text { font-size: 13px; line-height: 1.5; }
+    .cat-detail-memo { font-size: 11px; color: var(--text2); margin-top: 2px; }
+    .cat-detail-meta { font-size: 11px; color: var(--text2); margin-top: 3px; }
+    .cat-detail-hours { font-size: 13px; color: var(--text2); white-space: nowrap; }
+
     .staff-item, .vehicle-item {
       display: flex;
       justify-content: space-between;
@@ -396,15 +422,23 @@
 
     <label>作業区分</label>
     <select id="inp-category">
-      <option value="鈑金">鈑金</option>
-      <option value="塗装">塗装</option>
-      <option value="整備">整備</option>
-      <option value="FRP">FRP</option>
-      <option value="溶接">溶接</option>
-      <option value="分解・組付">分解・組付</option>
-      <option value="部品探し">部品探し</option>
-      <option value="その他">その他</option>
+      <option value="">選択してください / Vui lòng chọn</option>
+      <option value="分解・取り外し">分解・取り外し / バラし・はがす</option>
+      <option value="鈑金・修正">鈑金・修正 / Gò nắn tôn</option>
+      <option value="溶接">溶接 / ようせつ</option>
+      <option value="製作・加工">製作・加工 / カット・Chế tạo</option>
+      <option value="FRP・樹脂">FRP・樹脂 / Nhựa composite (FRP)</option>
+      <option value="パテ（付け・研ぎ）">パテ（付け・研ぎ）/ パテとぎ</option>
+      <option value="サフェーサー（塗布・研ぎ）">サフェーサー（塗布・研ぎ）/ サフとぎ</option>
+      <option value="足付け・スコッチ">足付け・スコッチ / あしずけ</option>
+      <option value="マスキング">マスキング / かみはり</option>
+      <option value="調色・塗装">調色・塗装 / ペイント</option>
+      <option value="磨き・仕上げ">磨き・仕上げ / ミガキ・ゴミトリ</option>
+      <option value="組付・取付">組付・取付 / セット</option>
+      <option value="整備・電装">整備・電装 / Bảo dưỡng &amp; điện</option>
+      <option value="その他">その他 / Khác</option>
     </select>
+    <div class="hint"><b>1行につき1工程です。</b>複数の工程をやった日は、分けて登録してください。</div>
 
     <label>作業内容</label>
     <input type="text" id="inp-content" placeholder="例：ドア内装外し、鈑金下処理">
@@ -557,14 +591,21 @@
     <select id="edit-rec-vehicle"></select>
     <label>作業区分</label>
     <select id="edit-rec-category">
-      <option value="鈑金">鈑金</option>
-      <option value="塗装">塗装</option>
-      <option value="整備">整備</option>
-      <option value="FRP">FRP</option>
-      <option value="溶接">溶接</option>
-      <option value="分解・組付">分解・組付</option>
-      <option value="部品探し">部品探し</option>
-      <option value="その他">その他</option>
+      <option value="">選択してください / Vui lòng chọn</option>
+      <option value="分解・取り外し">分解・取り外し / バラし・はがす</option>
+      <option value="鈑金・修正">鈑金・修正 / Gò nắn tôn</option>
+      <option value="溶接">溶接 / ようせつ</option>
+      <option value="製作・加工">製作・加工 / カット・Chế tạo</option>
+      <option value="FRP・樹脂">FRP・樹脂 / Nhựa composite (FRP)</option>
+      <option value="パテ（付け・研ぎ）">パテ（付け・研ぎ）/ パテとぎ</option>
+      <option value="サフェーサー（塗布・研ぎ）">サフェーサー（塗布・研ぎ）/ サフとぎ</option>
+      <option value="足付け・スコッチ">足付け・スコッチ / あしずけ</option>
+      <option value="マスキング">マスキング / かみはり</option>
+      <option value="調色・塗装">調色・塗装 / ペイント</option>
+      <option value="磨き・仕上げ">磨き・仕上げ / ミガキ・ゴミトリ</option>
+      <option value="組付・取付">組付・取付 / セット</option>
+      <option value="整備・電装">整備・電装 / Bảo dưỡng &amp; điện</option>
+      <option value="その他">その他 / Khác</option>
     </select>
     <label>作業内容</label>
     <input type="text" id="edit-rec-content">
@@ -684,6 +725,29 @@ document.addEventListener('DOMContentLoaded', () => {
   // 初期化はログイン成功後に実行
 });
 
+// 旧区分（鈑金/塗装/整備/分解・組付/部品探し 等）の過去レコードを編集しても
+// 区分が勝手に書き換わらないよう、選択肢に無い値はその場で追加してから選ぶ。
+function setCategoryValue(selectId, value) {
+  const sel = document.getElementById(selectId);
+  const v = value || '';
+  if (v && !Array.from(sel.options).some(o => o.value === v)) {
+    const o = document.createElement('option');
+    o.value = v; o.textContent = v + '（旧区分）';
+    sel.appendChild(o);
+  }
+  sel.value = v;
+}
+
+let catDetailUid = 0;
+// 作業区分の行をタップしたとき、その区分に入っている日報の作業内容をそのまま開く。
+function toggleCatDetail(id, row) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const open = el.classList.toggle('open');
+  const caret = row.querySelector('.cat-caret');
+  if (caret) caret.textContent = open ? '▼' : '▶';
+}
+
 function switchTab(tab, btn) {
   document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('nav button').forEach(el => el.classList.remove('active'));
@@ -706,6 +770,8 @@ async function gasPost(data) {
   if (adminActions.includes(data.action) && currentAdminToken) {
     data = { ...data, adminToken: currentAdminToken };
   }
+  // [①] 書き込みにも合言葉を添える。GAS側が未対応でも無視されるだけなので、先に入れて安全。
+  data = { ...data, token: READ_TOKEN };
   const res = await fetch(gasUrl, { method: 'POST', body: JSON.stringify(data) });
   return res.json();
 }
@@ -784,8 +850,8 @@ async function submitRecord() {
   const breakMinutes = parseInt(document.getElementById('inp-break').value) || 0;
   const memo = document.getElementById('inp-memo').value.trim();
 
-  if (!date || !staff || !vehicle || !content) {
-    showToast('日付・スタッフ・車両・作業内容は必須です', true);
+  if (!date || !staff || !vehicle || !category || !content) {
+    showToast('日付・スタッフ・車両・作業区分・作業内容は必須です', true);
     return;
   }
 
@@ -887,14 +953,20 @@ async function loadAmountSummary() {
     const byVehicle = {};
     records.forEach(r => {
       if (!r.vehicle) return;
-      if (!byVehicle[r.vehicle]) byVehicle[r.vehicle] = {};
-      if (!byVehicle[r.vehicle][r.staff]) byVehicle[r.vehicle][r.staff] = { hours: 0, amount: 0 };
-      byVehicle[r.vehicle][r.staff].hours += parseFloat(r.hours) || 0;
-      byVehicle[r.vehicle][r.staff].amount += parseInt(r.amount) || 0;
+      const v = byVehicle[r.vehicle] || (byVehicle[r.vehicle] = { staff: {}, category: {} });
+      const hours = parseFloat(r.hours) || 0;
+      const amount = parseInt(r.amount) || 0;
+      const st = v.staff[r.staff] || (v.staff[r.staff] = { hours: 0, amount: 0 });
+      st.hours += hours; st.amount += amount;
+      const catName = r.category || '未設定';
+      const ct = v.category[catName] || (v.category[catName] = { hours: 0, items: [] });
+      ct.hours += hours;
+      ct.items.push(r);
     });
 
     let html = '';
-    Object.entries(byVehicle).forEach(([vehicle, staffMap]) => {
+    Object.entries(byVehicle).forEach(([vehicle, data]) => {
+      const staffMap = data.staff;
       const totalAmount = Object.values(staffMap).reduce((s, v) => s + v.amount, 0);
       const totalHours = Object.values(staffMap).reduce((s, v) => s + v.hours, 0);
       html += `
@@ -906,16 +978,50 @@ async function loadAmountSummary() {
               <div style="font-size:11px;color:var(--text2);text-align:right">${Math.round(totalHours*10)/10}h</div>
             </div>
           </div>`;
-      Object.entries(staffMap).forEach(([staff, data]) => {
+      Object.entries(staffMap).forEach(([staff, d]) => {
         html += `
           <div class="staff-row">
             <div>
               <div class="staff-name">${esc(staff)}</div>
-              <div class="staff-hours">${Math.round(data.hours*10)/10}h</div>
+              <div class="staff-hours">${Math.round(d.hours*10)/10}h</div>
             </div>
-            <div class="staff-amount">¥${data.amount.toLocaleString()}</div>
+            <div class="staff-amount">¥${d.amount.toLocaleString()}</div>
           </div>`;
       });
+
+      // 作業区分ごとの時間内訳（時間の長い順）。タップで作業内容の生データを開く。
+      // 推定は一切しない。入力された区分をそのまま集計している。
+      const cats = Object.entries(data.category).sort((a, b) => b[1].hours - a[1].hours);
+      if (cats.length) {
+        html += '<div class="section-label">作業区分別の時間（タップで作業内容）</div>';
+        cats.forEach(([cat, d]) => {
+          const pct = totalHours > 0 ? Math.round(d.hours / totalHours * 100) : 0;
+          const detailId = 'catdet-' + (catDetailUid++);
+          html += `
+          <div class="cat-row" onclick="toggleCatDetail('${detailId}', this)">
+            <div class="cat-name"><span class="cat-caret">▶</span>${esc(cat)}</div>
+            <div class="cat-bar"><span style="width:${pct}%"></span></div>
+            <div class="cat-hours">${Math.round(d.hours*10)/10}h</div>
+          </div>
+          <div class="cat-detail" id="${detailId}">`;
+          d.items
+            .slice()
+            .sort((a, b) => (parseFloat(b.hours) || 0) - (parseFloat(a.hours) || 0))
+            .forEach(it => {
+              const memo = it.memo ? `<div class="cat-detail-memo">${esc(it.memo)}</div>` : '';
+              html += `
+            <div class="cat-detail-row">
+              <div>
+                <div class="cat-detail-text">${esc(it.content || '（作業内容の記入なし）')}</div>
+                ${memo}
+                <div class="cat-detail-meta">${esc(it.date)}・${esc(it.staff)}</div>
+              </div>
+              <div class="cat-detail-hours">${Math.round((parseFloat(it.hours) || 0) * 10) / 10}h</div>
+            </div>`;
+            });
+          html += '</div>';
+        });
+      }
       html += '</div>';
     });
     container.innerHTML = html;
@@ -1157,7 +1263,7 @@ function openEditRecord(recJson) {
   });
   vehicleSel.value = r.vehicle || '';
 
-  document.getElementById('edit-rec-category').value = r.category || 'その他';
+  setCategoryValue('edit-rec-category', r.category);
   openModal('modal-edit-record');
 }
 
@@ -1179,8 +1285,8 @@ async function saveEditRecord() {
   const breakMinutes = parseInt(document.getElementById('edit-rec-break').value) || 0;
   const memo = document.getElementById('edit-rec-memo').value.trim();
 
-  if (!date || !staff || !vehicle || !content) {
-    showToast('日付・スタッフ・車両・作業内容は必須です', true);
+  if (!date || !staff || !vehicle || !category || !content) {
+    showToast('日付・スタッフ・車両・作業区分・作業内容は必須です', true);
     return;
   }
 

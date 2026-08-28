@@ -139,6 +139,7 @@
     .btn-small { display: inline-block; width: auto; padding: 6px 12px; font-size: 13px; border-radius: 6px; }
     .btn-mt { margin-top: 16px; }
 
+    .hint { font-size: 11px; color: var(--text2); margin-top: 4px; line-height: 1.5; }
     .period-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -281,7 +282,7 @@
     <input type="date" id="inp-date">
 
     <label>スタッフ</label>
-    <select id="inp-staff">
+    <select id="inp-staff" onchange="rememberStaff()">
       <option value="">選択してください</option>
     </select>
 
@@ -292,15 +293,23 @@
 
     <label>作業区分</label>
     <select id="inp-category">
-      <option value="鈑金">鈑金</option>
-      <option value="塗装">塗装</option>
-      <option value="整備">整備</option>
-      <option value="FRP">FRP</option>
-      <option value="溶接">溶接</option>
-      <option value="分解・組付">分解・組付</option>
-      <option value="部品探し">部品探し</option>
-      <option value="その他">その他</option>
+      <option value="">選択してください / Vui lòng chọn</option>
+      <option value="分解・取り外し">分解・取り外し / バラし・はがす</option>
+      <option value="鈑金・修正">鈑金・修正 / Gò nắn tôn</option>
+      <option value="溶接">溶接 / ようせつ</option>
+      <option value="製作・加工">製作・加工 / カット・Chế tạo</option>
+      <option value="FRP・樹脂">FRP・樹脂 / Nhựa composite (FRP)</option>
+      <option value="パテ（付け・研ぎ）">パテ（付け・研ぎ）/ パテとぎ</option>
+      <option value="サフェーサー（塗布・研ぎ）">サフェーサー（塗布・研ぎ）/ サフとぎ</option>
+      <option value="足付け・スコッチ">足付け・スコッチ / あしずけ</option>
+      <option value="マスキング">マスキング / かみはり</option>
+      <option value="調色・塗装">調色・塗装 / ペイント</option>
+      <option value="磨き・仕上げ">磨き・仕上げ / ミガキ・ゴミトリ</option>
+      <option value="組付・取付">組付・取付 / セット</option>
+      <option value="整備・電装">整備・電装 / Bảo dưỡng &amp; điện</option>
+      <option value="その他">その他 / Khác</option>
     </select>
+    <div class="hint"><b>1行につき1工程です。</b>複数の工程をやった日は、分けて登録してください。</div>
 
     <label>作業内容</label>
     <input type="text" id="inp-content" placeholder="例：ドア内装外し、鈑金下処理">
@@ -371,14 +380,21 @@
     <select id="edit-rec-vehicle"></select>
     <label>作業区分</label>
     <select id="edit-rec-category">
-      <option value="鈑金">鈑金</option>
-      <option value="塗装">塗装</option>
-      <option value="整備">整備</option>
-      <option value="FRP">FRP</option>
-      <option value="溶接">溶接</option>
-      <option value="分解・組付">分解・組付</option>
-      <option value="部品探し">部品探し</option>
-      <option value="その他">その他</option>
+      <option value="">選択してください / Vui lòng chọn</option>
+      <option value="分解・取り外し">分解・取り外し / バラし・はがす</option>
+      <option value="鈑金・修正">鈑金・修正 / Gò nắn tôn</option>
+      <option value="溶接">溶接 / ようせつ</option>
+      <option value="製作・加工">製作・加工 / カット・Chế tạo</option>
+      <option value="FRP・樹脂">FRP・樹脂 / Nhựa composite (FRP)</option>
+      <option value="パテ（付け・研ぎ）">パテ（付け・研ぎ）/ パテとぎ</option>
+      <option value="サフェーサー（塗布・研ぎ）">サフェーサー（塗布・研ぎ）/ サフとぎ</option>
+      <option value="足付け・スコッチ">足付け・スコッチ / あしずけ</option>
+      <option value="マスキング">マスキング / かみはり</option>
+      <option value="調色・塗装">調色・塗装 / ペイント</option>
+      <option value="磨き・仕上げ">磨き・仕上げ / ミガキ・ゴミトリ</option>
+      <option value="組付・取付">組付・取付 / セット</option>
+      <option value="整備・電装">整備・電装 / Bảo dưỡng &amp; điện</option>
+      <option value="その他">その他 / Khác</option>
     </select>
     <label>作業内容</label>
     <input type="text" id="edit-rec-content">
@@ -440,6 +456,29 @@ document.addEventListener('DOMContentLoaded', () => {
   calcPreview();
 });
 
+// 旧区分（鈑金/塗装/整備/分解・組付/部品探し 等）の過去レコードを編集しても
+// 区分が勝手に書き換わらないよう、選択肢に無い値はその場で追加してから選ぶ。
+function setCategoryValue(selectId, value) {
+  const sel = document.getElementById(selectId);
+  const v = value || '';
+  if (v && !Array.from(sel.options).some(o => o.value === v)) {
+    const o = document.createElement('option');
+    o.value = v; o.textContent = v + '（旧区分）';
+    sel.appendChild(o);
+  }
+  sel.value = v;
+}
+
+// [③] この端末を使っている人を覚えておく。他人の日報を誤って書き換える事故を防ぐため。
+// 覚えていない間は今までどおり全部編集できる（動作を止めない）。
+function rememberStaff() {
+  const v = document.getElementById('inp-staff').value;
+  if (v) { try { localStorage.setItem('myStaffName', v); } catch (e) {} }
+}
+function getMyStaffName() {
+  try { return localStorage.getItem('myStaffName') || ''; } catch (e) { return ''; }
+}
+
 function switchTab(tab, btn) {
   document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('nav button').forEach(el => el.classList.remove('active'));
@@ -454,6 +493,8 @@ async function gasGet(params) {
 }
 
 async function gasPost(data) {
+  // [①] 書き込みにも合言葉を添える。GAS側が未対応でも無視されるだけなので、先に入れて安全。
+  data = { ...data, token: READ_TOKEN };
   const res = await fetch(gasUrl, { method: 'POST', body: JSON.stringify(data) });
   return res.json();
 }
@@ -556,8 +597,8 @@ async function submitRecord() {
   const breakMinutes = parseInt(document.getElementById('inp-break').value) || 0;
   const memo = document.getElementById('inp-memo').value.trim();
 
-  if (!date || !staff || !vehicle || !content) {
-    showToast('日付・スタッフ・車両・作業内容は必須です', true);
+  if (!date || !staff || !vehicle || !category || !content) {
+    showToast('日付・スタッフ・車両・作業区分・作業内容は必須です', true);
     return;
   }
 
@@ -581,6 +622,7 @@ async function submitRecord() {
     });
     if (res && res.success) {
       showToast('送信しました！');
+      rememberStaff();
       document.getElementById('inp-content').value = '';
       document.getElementById('inp-memo').value = '';
     } else if (res && res.duplicate) {
@@ -690,6 +732,11 @@ function closeModal(id) { document.getElementById(id).classList.remove('open'); 
 
 function openEditRecord(recJson) {
   const r = JSON.parse(decodeURIComponent(recJson));
+  // [③] 自分以外の日報なら一度止める。代理入力もあるので、禁止ではなく確認にとどめる。
+  const me = getMyStaffName();
+  if (me && r.staff && r.staff !== me) {
+    if (!confirm(`これは ${r.staff} さんの日報です。\nあなた（${me} さん）の記録ではありません。\n本当に編集しますか？`)) return;
+  }
   document.getElementById('edit-record-rowid').value = r.id || r.rowId || '';
   document.getElementById('edit-record-verify-staff').value = r.staff || '';
   document.getElementById('edit-record-verify-date').value = r.date ? r.date.toString().substring(0, 10) : '';
@@ -715,7 +762,7 @@ function openEditRecord(recJson) {
   });
   vehicleSel.value = r.vehicle || '';
 
-  document.getElementById('edit-rec-category').value = r.category || 'その他';
+  setCategoryValue('edit-rec-category', r.category);
   openModal('modal-edit-record');
 }
 
@@ -736,8 +783,8 @@ async function saveEditRecord() {
   const breakMinutes = parseInt(document.getElementById('edit-rec-break').value) || 0;
   const memo = document.getElementById('edit-rec-memo').value.trim();
 
-  if (!date || !staff || !vehicle || !content) {
-    showToast('日付・スタッフ・車両・作業内容は必須です', true);
+  if (!date || !staff || !vehicle || !category || !content) {
+    showToast('日付・スタッフ・車両・作業区分・作業内容は必須です', true);
     return;
   }
 
