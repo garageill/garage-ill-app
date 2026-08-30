@@ -668,9 +668,10 @@ async function checkPassword() {
   btn.textContent = '確認中...';
   btn.disabled = true;
   try {
+    // [①] ログインはgasPostを経由しないため、ここでもトークンを付ける必要がある
     const res = await fetch(gasUrl, {
       method: 'POST',
-      body: JSON.stringify({ action: 'verifyAdmin', password: input })
+      body: JSON.stringify({ action: 'verifyAdmin', password: input, token: READ_TOKEN })
     });
     const data = await res.json();
     if (data && data.success) {
